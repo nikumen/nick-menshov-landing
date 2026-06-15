@@ -1,0 +1,18 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# deps (none required to build — static site)
+node_modules/
+
+# heavy source footage (NOT deployed — only transcoded site/media/reel*.mp4 are committed)
+concept/media/IMG_*.MP4
+concept/media/*.mov
+concept/media/long_*.mp4
+concept/media/long_*.mov
+concept/media/*.jpg
+concept/media/frame_*.jpg
+
+# build scratch
+/tmp/

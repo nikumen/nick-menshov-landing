@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ник Меньшов — концепт</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Archivo+Expanded:wght@600;700&family=Noto+Serif+JP:wght@600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --fg:    oklch(96% 0.010 85);
+    --muted: oklch(80% 0.012 80);
+    --faint: oklch(66% 0.012 80);
+    --hair:  oklch(96% 0.01 85 / 0.18);
+    --ease:  cubic-bezier(0.16, 1, 0.3, 1);
+    --name:  clamp(2.6rem, min(0.4rem + 10vw, 14.5vh), 8.5rem);
+  }
+  body.pa { --accent: oklch(67% 0.17 32); --scrim: oklch(15% 0.012 50);
+            --vfilter: grayscale(0.22) contrast(1.06) brightness(0.6) saturate(0.95); --tint: oklch(67% 0.17 32 / 0.10); }
+  body.pb { --accent: oklch(82% 0.105 82); --scrim: oklch(19% 0.022 62);
+            --fg: oklch(95% 0.02 86); --muted: oklch(82% 0.03 82);
+            --vfilter: sepia(0.32) contrast(1.04) brightness(0.64) saturate(1.05); --tint: oklch(82% 0.105 82 / 0.10); }
+  body.pc { --accent: oklch(73% 0.13 18); --scrim: oklch(16% 0.02 330);
+            --fg: oklch(96% 0.012 350); --muted: oklch(80% 0.02 350);
+            --vfilter: grayscale(0.1) contrast(1.05) brightness(0.58) saturate(1.1) hue-rotate(-6deg); --tint: oklch(73% 0.13 18 / 0.12); }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:#0c0c0d; color:var(--fg); font-family:'Archivo',system-ui,sans-serif;
+         -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .ser { font-family:'Prata',serif; }
+  .label { font-size:0.7rem; letter-spacing:0.3em; text-transform:uppercase; font-weight:600; }
+
+  /* showreel bg — two crossfading layers */
+  .bg { position:fixed; inset:0; z-index:0; background:#0c0c0d; }
+  .bg .v { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;
+           opacity:0; transition:opacity .9s var(--ease); filter:var(--vfilter); }
+  .bg .v.on { opacity:1; }
+  .bg::after { content:""; position:absolute; inset:0; z-index:1; transition:background .6s;
+    background:
+      linear-gradient(180deg, color-mix(in oklch, var(--scrim) 70%, transparent) 0%, color-mix(in oklch, var(--scrim) 18%, transparent) 36%, color-mix(in oklch, var(--scrim) 88%, transparent) 100%),
+      radial-gradient(130% 100% at 80% 16%, transparent 30%, var(--scrim) 100%),
+      var(--tint); }
+  .grain { position:fixed; inset:0; z-index:50; pointer-events:none; opacity:0.06; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  nav { position:fixed; inset:0 0 auto 0; z-index:40; display:flex; align-items:center; justify-content:space-between;
+        padding:24px clamp(20px, 4vw, 60px); }
+  .brand { font-family:'Prata',serif; font-size:1.25rem; letter-spacing:0.01em; }
+  .links { display:flex; gap:30px; }
+  .links a { color:var(--muted); text-decoration:none; font-size:0.76rem; letter-spacing:0.08em; text-transform:uppercase; position:relative; transition:color .3s; }
+  .links a::after{ content:""; position:absolute; left:0; right:100%; bottom:-6px; height:1px; background:var(--accent); transition:right .35s var(--ease);}
+  .links a:hover{ color:var(--fg);} .links a:hover::after{ right:0;}
+  .book { font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600; color:var(--fg); text-decoration:none;
+          border:1px solid var(--hair); padding:12px 20px; border-radius:2px; transition:background .35s,color .35s,border-color .35s;}
+  .book:hover{ background:var(--accent); border-color:var(--accent); color:#fff;}
+  @media (max-width:900px){ .links{display:none;} }
+
+  .hero { position:relative; z-index:2; min-height:100svh; display:flex; flex-direction:column; justify-content:flex-end;
+          padding:0 clamp(20px, 4vw, 60px) 0; }
+  .rules { position:absolute; inset:0; z-index:1; pointer-events:none; }
+  .rules i { position:absolute; background:var(--hair); }
+  .rules .v1 { left:clamp(20px, 4vw, 60px); top:0; bottom:0; width:1px; }
+  .rules .v2 { right:clamp(20px, 4vw, 60px); top:0; bottom:0; width:1px; }
+  .rules .h1 { left:0; right:0; bottom:118px; height:1px; }
+
+  .meta-tl { position:absolute; top:96px; left:clamp(20px, 4vw, 60px); display:flex; flex-direction:column; gap:8px; z-index:7; }
+  .meta-tl .label { color:var(--muted); }
+  .meta-tl .label.ac { color:var(--accent); }
+
+  .seal { position:absolute; top:108px; right:clamp(20px, 4vw, 60px); width:132px; height:132px; z-index:5; text-decoration:none; }
+  .seal svg { width:100%; height:100%; animation:spin 26s linear infinite; }
+  .seal text { fill:var(--fg); font-family:'Archivo',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; }
+  .seal .cn { position:absolute; inset:0; display:grid; place-items:center; }
+  .seal .cn b { font-family:'Noto Serif JP',serif; font-size:1.45rem; color:var(--accent); transition:transform .4s var(--ease); }
+  @keyframes spin { to { transform:rotate(360deg);} }
+  .seal:hover .cn b { transform:scale(1.12); }
+
+  .vside { position:absolute; right:calc(clamp(20px, 4vw, 60px) - 24px); top:50%; transform:translateY(-50%); writing-mode:vertical-rl;
+           font-size:0.64rem; letter-spacing:0.42em; text-transform:uppercase; color:var(--faint); z-index:3; }
+
+  .stage { position:relative; z-index:3; padding-bottom:30px; }
+  .role { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .role .mk { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .role .label { color:var(--fg); }
+  .name { font-family:'Prata',serif; font-size:var(--name); line-height:0.86; letter-spacing:-0.015em; }
+  .name .l1 { display:block; }
+  .name .l2 { display:block; padding-left:0.42em; }
+  .name .njp { display:inline-block; font-family:'Noto Serif JP',serif; font-size:clamp(0.85rem, 0.6rem + 0.7vw, 1.15rem);
+    font-weight:600; color:var(--accent); letter-spacing:0.12em; vertical-align:top; margin-left:0.5em; transform:translateY(0.4em); white-space:nowrap; }
+
+  .row { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; margin-top:32px; flex-wrap:wrap; }
+  .tagline { font-size:clamp(1rem, 0.9rem + 0.5vw, 1.35rem); color:var(--fg); max-width:34ch; line-height:1.5; }
+  .metar { display:flex; gap:10px 28px; flex-wrap:wrap; font-size:0.8rem; color:var(--muted); letter-spacing:0.03em; }
+  .metar b { color:var(--fg); font-weight:600; }
+  .metar .ji { color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent); }
+  .metar .jp { font-family:'Noto Serif JP',serif; }
+
+  .actions { display:flex; align-items:center; gap:24px; margin-top:30px; flex-wrap:wrap; }
+  .cta { font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600; color:#fff; background:var(--accent);
+         text-decoration:none; padding:17px 30px; border-radius:2px; transition:transform .35s var(--ease),filter .35s;}
+  .cta:hover{ transform:translateY(-2px); filter:brightness(1.08);}
+  .cta-dark { background:oklch(27% 0.01 60); color:var(--fg); }
+  .cta-dark:hover { background:oklch(34% 0.012 60); filter:none; }
+
+  .ticker { position:relative; z-index:3; height:118px; display:flex; align-items:center; overflow:hidden; white-space:nowrap; border-top:1px solid var(--hair); margin-top:22px; }
+  .ticker .tr { display:inline-block; animation:scroll 32s linear infinite; }
+  .ticker span { font-family:'Prata',serif; font-size:1.2rem; color:var(--faint); margin:0 22px; }
+  .ticker span.ac { color:var(--fg); }
+  .ticker .st { font-size:0.7rem; letter-spacing:0.3em; color:var(--accent); }
+  @keyframes scroll { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  .rv{opacity:0; transform:translateY(22px); animation:rise 1s var(--ease) forwards;}
+  .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.32s}.d4{animation-delay:.46s}.d5{animation-delay:.6s}.d6{animation-delay:.74s}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  @media (max-width:900px){
+    .seal{ width:100px; height:100px; top:auto; bottom:150px;} .seal text{ font-size:13px;}
+    .vside{ display:none;} .rules .v2{ display:none;}
+    .name .l2{ padding-left:0.18em;} .ticker span{ font-size:1rem;} .meta-tl{ top:86px; }
+  }
+  @media (prefers-reduced-motion:reduce){ .rv{animation:none;opacity:1;transform:none;} .seal svg,.ticker .tr{animation:none;} .bg .v{transition:none;} }
+
+  /* сквозной мини-плеер сетов (persistent across sections) */
+  .player{ position:fixed; left:clamp(16px,4vw,60px); bottom:22px; z-index:55; display:flex; align-items:center; gap:15px;
+           padding:11px 22px 11px 11px; background:rgba(22,18,18,.82); backdrop-filter:blur(14px) saturate(1.3);
+           border:1px solid color-mix(in oklch, var(--accent) 30%, var(--hair)); border-radius:999px;
+           box-shadow:0 14px 48px -14px #000, 0 0 0 4px color-mix(in oklch, var(--accent) 12%, transparent); }
+  .player .pp{ position:relative; width:50px; height:50px; flex:0 0 auto; border:0; border-radius:50%; background:var(--accent); color:#fff;
+               display:grid; place-items:center; cursor:pointer; font-size:1.05rem; transition:transform .3s var(--ease),filter .3s;}
+  .player .pp:hover{ transform:scale(1.06); filter:brightness(1.08);}
+  .player:not(.playing) .pp::after{ content:""; position:absolute; inset:-5px; border-radius:50%; border:1.5px solid var(--accent); animation:ring 1.8s var(--ease) infinite; }
+  @keyframes ring{ 0%{transform:scale(1);opacity:.7;} 100%{transform:scale(1.55);opacity:0;} }
+  .player .wave{ display:flex; align-items:center; gap:2.5px; height:22px; }
+  .player .wave i{ width:2.5px; height:6px; background:var(--accent); border-radius:2px; opacity:.55; }
+  .player.playing .wave i{ animation:eq .9s ease-in-out infinite; }
+  .player .wave i:nth-child(2){animation-delay:.12s}.player .wave i:nth-child(3){animation-delay:.24s}
+  .player .wave i:nth-child(4){animation-delay:.36s}.player .wave i:nth-child(5){animation-delay:.48s}
+  .player .wave i:nth-child(6){animation-delay:.30s}.player .wave i:nth-child(7){animation-delay:.18s}
+  @keyframes eq{ 0%,100%{height:5px;opacity:.5;} 50%{height:20px;opacity:1;} }
+  .player .info{ display:flex; flex-direction:column; gap:2px; padding-right:6px; }
+  .player .info .t{ font-size:0.82rem; color:var(--fg); white-space:nowrap; }
+  .player .info .s{ font-size:0.58rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--faint); }
+  .player .info .bar{ position:relative; height:3px; width:148px; margin-top:4px; background:var(--hair); border-radius:3px; overflow:hidden; }
+  .player .info .bar::after{ content:""; position:absolute; inset:0 auto 0 0; width:34%; background:var(--accent); border-radius:3px; }
+  .player .nav{ display:flex; gap:4px; }
+  .player .nav button{ background:transparent; border:0; color:var(--muted); cursor:pointer; font-size:0.85rem; padding:4px; transition:color .3s;}
+  .player .nav button:hover{ color:var(--fg);}
+  @media (max-width:560px){ .player{ left:12px; right:12px; bottom:12px; justify-content:flex-start; } .player .info .t{ font-size:0.74rem;} }
+</style>
+</head>
+<body class="pa">
+<div class="bg">
+  <video class="v on" id="v0" muted playsinline preload="auto" poster="media/poster.jpg"></video>
+  <video class="v" id="v1" muted playsinline preload="auto"></video>
+</div>
+<div class="grain"></div>
+
+<nav class="rv d1">
+  <div class="brand">Ник&nbsp;Меньшов</div>
+  <div class="links">
+    <a href="#about">Обо мне</a><a href="#sound-director">Саунд-директор</a><a href="#portfolio">Портфолио</a><a href="#rider">Райдер</a><a href="#book">Даты</a><a href="#contacts">Контакты</a>
+  </div>
+  <a href="#" class="book">Забронировать</a>
+</nav>
+
+<div class="rules"><i class="v1"></i><i class="v2"></i><i class="h1"></i></div>
+
+<div class="meta-tl rv d2">
+  <span class="label ac">● Доступен для броней</span>
+  <span class="label">Moscow — International</span>
+</div>
+
+<a class="seal rv d3" href="https://top100awards.ru/jury/menshov" target="_blank" rel="noopener" title="Член жюри Top100 Awards">
+  <svg viewBox="0 0 200 200" aria-hidden="true">
+    <defs><path id="circ" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
+    <text><textPath href="#circ">★ ЧЛЕН ЖЮРИ · TOP100 AWARDS · ЧЛЕН ЖЮРИ · TOP100 AWARDS · </textPath></text>
+  </svg>
+  <span class="cn"><b>音</b></span>
+</a>
+
+<span class="vside rv d4">Sound Director — DJ</span>
+
+<header class="hero">
+  <div class="stage">
+    <div class="role rv d3">
+      <span class="mk"></span><span class="label">Sound Director — DJ</span>
+    </div>
+    <h1 class="name">
+      <span class="l1 rv d3">Ник<span class="njp">ニック・メンショフ</span></span>
+      <span class="l2 rv d4">Меньшов</span>
+    </h1>
+
+    <div class="row">
+      <p class="tagline rv d5">Формирую культуру музыкального опыта для мероприятий, брендов и людей.</p>
+      <div class="metar rv d5">
+        <span><b>Москва</b> · с 2017</span>
+        <span>EN <b>C2</b> · Японский (<span class="jp">日本語</span>) базовый</span>
+        <span>Участник <a class="ji" href="https://top15moscow.ru/djs/nickmenshov" target="_blank" rel="noopener">Top15 Moscow ↗</a></span>
+      </div>
+    </div>
+
+    <div class="actions rv d6">
+      <a href="#book" class="cta">Забронировать дату</a>
+      <a href="#sound-director" class="cta cta-dark">Саунд-дирекция</a>
+    </div>
+  </div>
+
+  <div class="ticker rv d6">
+    <div class="tr">
+      <span class="ac">Яндекс</span><span class="st">/</span><span>Tinkoff</span><span class="st">/</span><span class="ac">SBER</span><span class="st">/</span><span class="ac">Setters</span><span class="st">/</span><span class="ac">VK</span><span class="st">/</span><span>Feerique</span><span class="st">/</span><span>MTC</span><span class="st">/</span><span>STAY</span><span class="st">/</span><span>PLUS1</span><span class="st">/</span><span>REDDAY</span><span class="st">/</span><span>BONWEDDINGS</span><span class="st">/</span>
+      <span class="ac">Яндекс</span><span class="st">/</span><span>Tinkoff</span><span class="st">/</span><span class="ac">SBER</span><span class="st">/</span><span class="ac">Setters</span><span class="st">/</span><span class="ac">VK</span><span class="st">/</span><span>Feerique</span><span class="st">/</span><span>MTC</span><span class="st">/</span><span>STAY</span><span class="st">/</span><span>PLUS1</span><span class="st">/</span><span>REDDAY</span><span class="st">/</span><span>BONWEDDINGS</span><span class="st">/</span>
+    </div>
+  </div>
+</header>
+
+<div class="player" id="player" aria-label="Плеер сетов">
+  <button class="pp" id="pp" aria-label="Слушать сет">▶</button>
+  <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="info">
+    <span class="t">Nick Menshov — Set 01</span>
+    <span class="s">Live · Progressive</span>
+    <span class="bar"></span>
+  </div>
+  <div class="nav"><button aria-label="Предыдущий">⏮</button><button aria-label="Следующий">⏭</button></div>
+</div>
+
+<script>
+  // persistent mini-player (стилизованный; миксы клиент выдаст позже)
+  (function(){
+    const pl=document.getElementById('player'), pp=document.getElementById('pp');
+    pp.addEventListener('click', ()=>{ const on=pl.classList.toggle('playing'); pp.textContent= on ? '⏸' : '▶'; });
+  })();
+
+  // showreel: crossfade through reels, loop
+  const reels=['media/reel1.mp4','media/reel7.mp4','media/reel2.mp4','media/reel3.mp4','media/reel8.mp4','media/reel4.mp4','media/reel5.mp4','media/reel6.mp4'];
+  const vids=[document.getElementById('v0'), document.getElementById('v1')];
+  let cur=0, idx=0, busy=false;
+  function start(v, src, onReady){
+    v.src=src; v.muted=true; v.playsInline=true; v.load();
+    const h=()=>{ v.removeEventListener('loadeddata',h); v.play().catch(()=>{}); onReady&&onReady(); };
+    v.addEventListener('loadeddata', h);
+  }
+  function advance(){
+    if(busy) return; busy=true;
+    const next=(idx+1)%reels.length, nv=vids[1-cur];
+    start(nv, reels[next], ()=>{
+      nv.classList.add('on'); vids[cur].classList.remove('on');
+      const old=cur; cur=1-cur; idx=next;
+      setTimeout(()=>{ try{vids[old].pause();}catch(e){} busy=false; }, 950);
+    });
+  }
+  vids.forEach(v=>{
+    v.addEventListener('timeupdate', ()=>{ if(v===vids[cur] && v.duration && v.currentTime > v.duration-1.0) advance(); });
+    v.addEventListener('ended', ()=>{ if(v===vids[cur]) advance(); });
+  });
+  start(vids[0], reels[0]);
+</script>
+</body>
+</html>
