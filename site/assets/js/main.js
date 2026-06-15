@@ -383,8 +383,17 @@
     const DOW = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
     const MON = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
     const MONl = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];   // genitive: «19 июня 2026»
-    // Demo busy dates (ISO). TODO: заменить на занятость из Google Calendar через serverless.
-    const busy = new Set(['2026-06-14','2026-06-21','2026-06-28','2026-07-04','2026-07-12','2026-07-19']);
+    // ── Занятость из Google Calendar (живая синхронизация) ──────────────────
+    // Включение: заполните GCAL ниже двумя значениями.
+    //   • Календарь должен быть ПУБЛИЧНЫМ (Настройки календаря → «Сделать общедоступным»).
+    //   • apiKey — ключ из Google Cloud Console (включён Google Calendar API),
+    //     ОБЯЗАТЕЛЬНО ограничен по HTTP-реферреру на домен сайта.
+    // Правки в Google Calendar появляются на сайте при следующем открытии/обновлении страницы.
+    const GCAL = {
+      calendarId: '',   // ID календаря, напр.: ab12cd34xyz@group.calendar.google.com
+      apiKey:     '',   // ключ Google Cloud (Calendar API), с ограничением по реферреру
+    };
+    const busy = new Set();   // резервные «занятые» даты вручную: busy.add('2026-07-04')
     const today = new Date(); today.setHours(0,0,0,0);
     const minView = new Date(today.getFullYear(), today.getMonth(), 1);
     const maxView = new Date(today.getFullYear(), today.getMonth() + 12, 1);   // bound forward nav: 12 months
@@ -443,7 +452,41 @@
       if (next > maxView) return;
       view = next; render();
     });
+    function markBusyDates(start, endExclusive) {
+      const d = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      for (; d < endExclusive; d.setDate(d.getDate() + 1)) busy.add(iso(d));
+    }
+    async function loadGoogleBusy() {
+      if (!GCAL.calendarId || !GCAL.apiKey) return;   // не настроено — остаётся ручной список
+      const timeMin = new Date(today.getFullYear(), today.getMonth(), 1).toISOString();
+      const timeMax = new Date(maxView.getFullYear(), maxView.getMonth() + 1, 1).toISOString();
+      const url = 'https://www.googleapis.com/calendar/v3/calendars/' + encodeURIComponent(GCAL.calendarId) + '/events'
+        + '?key=' + encodeURIComponent(GCAL.apiKey)
+        + '&singleEvents=true&maxResults=2500&fields=items(start,end,status)'
+        + '&timeMin=' + encodeURIComponent(timeMin) + '&timeMax=' + encodeURIComponent(timeMax);
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+        (data.items || []).forEach(ev => {
+          if (!ev.start || ev.status === 'cancelled') return;
+          if (ev.start.date) {                         // событие на весь день (end — эксклюзивный)
+            const s = new Date(ev.start.date + 'T00:00:00');
+            const rawEnd = ev.end && ev.end.date ? new Date(ev.end.date + 'T00:00:00') : null;
+            const endExcl = rawEnd && rawEnd > s ? rawEnd : new Date(s.getFullYear(), s.getMonth(), s.getDate() + 1);
+            markBusyDates(s, endExcl);
+          } else if (ev.start.dateTime) {              // событие со временем — занимаем дни от начала до конца
+            const s = new Date(ev.start.dateTime);
+            const e = new Date(ev.end && ev.end.dateTime ? ev.end.dateTime : ev.start.dateTime);
+            markBusyDates(s, new Date(e.getFullYear(), e.getMonth(), e.getDate() + 1));
+          }
+        });
+        if (selected && busy.has(selected)) selected = null;   // снять выбор, если дата стала занятой
+        render();
+      } catch (err) { /* сеть/ключ недоступны — календарь работает на ручном списке */ }
+    }
     render();
+    loadGoogleBusy();   // подтянуть занятость из Google Calendar и перерисовать
     return { getSelected: () => selected };
   })();
 
