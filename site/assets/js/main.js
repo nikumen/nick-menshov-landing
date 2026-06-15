@@ -390,8 +390,8 @@
     //     ОБЯЗАТЕЛЬНО ограничен по HTTP-реферреру на домен сайта.
     // Правки в Google Calendar появляются на сайте при следующем открытии/обновлении страницы.
     const GCAL = {
-      calendarId: '',   // ID календаря, напр.: ab12cd34xyz@group.calendar.google.com
-      apiKey:     '',   // ключ Google Cloud (Calendar API), с ограничением по реферреру
+      calendarId: 'nick.jackson.kelly@gmail.com',          // публичный календарь Ника
+      apiKey:     'AIzaSyBbvcmSwCS6I8mvH1-gUtPteyNDcuNJqc0', // ключ Calendar API (ограничить реферрером nikumen.github.io)
     };
     const busy = new Set();   // резервные «занятые» даты вручную: busy.add('2026-07-04')
     const today = new Date(); today.setHours(0,0,0,0);
