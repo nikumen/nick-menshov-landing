@@ -431,6 +431,8 @@ body.menu-open .mobile-menu { opacity:1; visibility:visible; }
 .footer .fbrand .jp { display:block; font-size:1rem; color:var(--accent); letter-spacing:0.2em; margin-top:14px; }
 .footer-bottom { display:flex; justify-content:space-between; gap:20px; margin-top:3rem; padding-top:1.6rem; border-top:1px solid var(--hair); font-size:0.74rem; color:var(--faint); flex-wrap:wrap; }
 .footer-bottom a { color:var(--muted); text-decoration:none; }
+/* mobile: 3 span stack column left, no ragged space-between */
+@media (max-width:560px){ .footer-bottom { flex-direction:column; align-items:flex-start; gap:10px; } }
 
 /* ============================================================ PERSISTENT PLAYER (console strip) */
 .player { position:fixed; left:var(--gutter); bottom:22px; z-index:55; display:flex; align-items:center; gap:13px;
