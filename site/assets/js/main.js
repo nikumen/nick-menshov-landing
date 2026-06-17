@@ -57,6 +57,9 @@
       v.addEventListener('ended', () => { if (v === vids[cur]) advance(); });
     });
     start(vids[0], reels[0]);
+    // mobile (iOS): muted autoplay часто заблокирован до первого жеста — запускаем по нему
+    const kick = () => vids[cur].play().catch(() => {});
+    ['touchstart','pointerdown','scroll'].forEach(ev => window.addEventListener(ev, kick, { once:true, passive:true }));
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) vids.forEach(v => v.pause());
       else if (!busy) vids[cur].play().catch(() => {});
@@ -283,6 +286,20 @@
       item.addEventListener('focus', () => { if (v.muted) play(); });
       item.addEventListener('blur', () => { if (v.muted) stop(); });
     });
+
+    // touch-устройства (нет hover): беззвучное превью автоиграет, когда плитка в зоне видимости
+    const noHover = matchMedia('(hover: none)').matches;
+    if (noHover && !(navigator.connection || {}).saveData && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          const v = $('video', e.target);
+          if (!v || !v.muted) return;                       // плитку, играющую со звуком, не трогаем
+          if (e.isIntersecting && e.intersectionRatio >= 0.6) { v.preload = 'auto'; v.play().catch(() => {}); }
+          else { try { v.pause(); } catch (err) {} }
+        });
+      }, { threshold: [0, 0.6] });
+      items.forEach(i => io.observe(i));
+    }
   })();
 
   /* ---------- sound-direction: cases behind a button ---------- */
@@ -439,8 +456,10 @@
     function setSelected(human, key) {
       const sd = $('#selDate'); if (sd) sd.textContent = human;
       const f = $('#bookForm'); if (f) f.dataset.date = key;
-      const name = $('#f-name'); if (name) name.focus({ preventScroll:true });
-      $('#book').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      const f2 = $('#bookForm');
+      if (f2) f2.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      // фокус на имя — только на указательных устройствах; на тач это всплывает клавиатуру и дёргает скролл
+      if (matchMedia('(hover: hover)').matches) { const name = $('#f-name'); if (name) name.focus({ preventScroll:true }); }
     }
     if (prevB) prevB.addEventListener('click', () => {
       const prev = new Date(view.getFullYear(), view.getMonth()-1, 1);

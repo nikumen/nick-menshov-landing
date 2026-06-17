@@ -374,7 +374,7 @@ body.menu-open .mobile-menu { opacity:1; visibility:visible; }
 .cal-legend i { display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:7px; vertical-align:-1px; }
 .cal-legend .lf i { background:var(--ink-3); } .cal-legend .lb i { width:6px; height:6px; border-radius:50%; background:var(--accent); margin-right:9px; }
 
-.bform { display:grid; gap:16px; }
+.bform { display:grid; gap:16px; scroll-margin-top:88px; }   /* выбор даты скроллит к форме — отступ под фикс-навбар */
 .bform .selected-date { font-size:0.85rem; color:var(--muted); }
 .bform .selected-date b { color:var(--accent); }
 .field { display:flex; flex-direction:column; gap:7px; }
