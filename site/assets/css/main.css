@@ -151,6 +151,13 @@ body.menu-open .mobile-menu { opacity:1; visibility:visible; }
 .hero-metar .ji { color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent); }
 .hero-actions { display:flex; align-items:center; gap:14px; margin-top:30px; flex-wrap:wrap; }
 
+/* mobile hero: десктоп-раскладка absolute наезжала — мету в поток над ролью, боковой лейбл скрыть */
+@media (max-width:640px){
+  .hero-meta { position:static; flex-direction:row; flex-wrap:wrap; gap:6px 18px; margin-bottom:22px; }
+  .hero-vside { display:none; }
+  .seal { width:92px; height:92px; top:80px; }
+}
+
 /* buttons */
 .btn { display:inline-flex; align-items:center; gap:10px; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;
        text-decoration:none; padding:17px 30px; border-radius:2px; cursor:pointer; border:0; transition:transform .35s var(--ease), filter .35s, background .35s, color .35s; }
