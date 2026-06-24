@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4321", "--directory", "/Users/fixed/nick-menshov-landing/concept"],
       "port": 4321
+    },
+    {
+      "name": "menshov-site",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/Users/fixed/nick-menshov-landing/tools/devserver.py", "8262"],
+      "port": 8262
     }
   ]
 }

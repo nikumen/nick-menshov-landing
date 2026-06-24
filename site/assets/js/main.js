@@ -119,6 +119,7 @@
       { src: 'media/mixes/set01-summer.m4a',     title: 'Your Memories · Summer', sub: 'Melodic · Sunset' },
       { src: 'media/mixes/set02-sashaksuuu.m4a', title: 'Georgia Live Kvevri',    sub: 'House · Live' },
       { src: 'media/mixes/set03-house-afro.m4a', title: 'House + Afro',           sub: 'Afro House' },
+      { src: 'media/mixes/set04-top100awards-pop.mp3', title: 'Top100 Awards Live · Pop', sub: 'Pop' },
     ];
     let i = 0, srcSet = false;
 
