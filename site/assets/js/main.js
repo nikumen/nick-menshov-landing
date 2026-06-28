@@ -546,15 +546,17 @@
             : 'Заявка отправлена. Спасибо! Свяжусь с вами в ближайшее время.';
           form.reset(); delete form.dataset.date; const sd = $('#selDate'); if (sd) sd.textContent = 'не выбрана'; pricing.render();
         } else {
-          // бэкенд ещё не подключён: формируем заявку, копируем и ведём в Telegram
+          // бэкенд ещё не подключён: формируем заявку, ведём в Telegram с предзаполненным текстом
           const priceLine = pricing.summary();
-          const sum = `Заявка${data.date ? ' на ' + data.date : ''}\nИмя: ${data.name}\nКонтакт: ${data.contact}\nФормат: ${data.format || 'не указано'}${priceLine ? '\nСтоимость: ' + priceLine : ''}\nЛокация: ${data.location || 'не указано'}\nБюджет: ${data.budget || 'не указано'}\nКомментарий: ${data.comment || 'не указано'}`;
+          const sum = `Заявка${data.date ? ' на ' + data.date : ''}\nИмя: ${data.name}\nКонтакт: ${data.contact}\nФормат: ${data.format || 'не указано'}${priceLine ? '\nСтоимость: ' + priceLine : ''}\nЛокация: ${data.location || 'не указано'}\nКомментарий: ${data.comment || 'не указано'}`;
+          const tgUrl = 'https://t.me/nickmenshov?text=' + encodeURIComponent(sum);
+          // буфер обмена — запасной канал, если предзаполнение не подхватится клиентом
           let copied = false;
           try { await navigator.clipboard.writeText(sum); copied = true; } catch (e) {}
           status.className = 'form-status ok';
-          status.innerHTML = copied
-            ? 'Заявка готова и скопирована в буфер. Отправьте её мне в Telegram <a href="https://t.me/nickmenshov" target="_blank" rel="noopener">@nickmenshov</a>, отвечу лично.'
-            : 'Заявка готова. Напишите мне в Telegram <a href="https://t.me/nickmenshov" target="_blank" rel="noopener">@nickmenshov</a> с деталями вечера, отвечу лично.';
+          status.innerHTML =
+            '<a class="tg-send btn btn--accent" href="' + tgUrl + '" target="_blank" rel="noopener">Открыть Telegram с заполненной заявкой ↗</a>'
+            + '<span class="tg-hint">' + (copied ? 'Заявка также скопирована в буфер — если текст не подставится, вставьте вручную.' : 'Откроется чат @nickmenshov с готовым текстом. Отвечу лично.') + '</span>';
         }
       } catch (err) {
         status.className = 'form-status bad';
